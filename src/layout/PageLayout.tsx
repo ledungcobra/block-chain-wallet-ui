@@ -4,12 +4,11 @@ export interface PageLayoutProps {
 
 export const PageLayout = ({ children }: PageLayoutProps) => {
     return (
-        <div className="container">
+        <div className="h-screen bg-slate-100 w-full">
             <div className="header">
                 <div className="logo"></div>
             </div>
-            <div className="body">{children}</div>
-            <div className="footer">My Wallet - v1.0.0</div>
+            <div className="body h-full">{children}</div>
         </div>
     );
 };

@@ -1,0 +1,28 @@
+.homebg {
+    background-image: url("../../assets/images/bg.png");
+    background-size: cover;
+    opacity: 0.7;
+    width: 100vw;
+    height: 100vh;
+    position: fixed;
+    top: 0;
+    left: 0;
+}
+
+.content {
+    position: fixed;
+    left: 0;
+    top: 0;
+}
+
+.card1 {
+    position: relative;
+    left: 0;
+    top: 0;
+}
+
+.card2 {
+    position: relative;
+    left: -50px;
+    bottom: -30px;
+}
