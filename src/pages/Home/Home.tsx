@@ -17,12 +17,17 @@ export const Home = () => {
     const handleAccessWallet = () => {
         navigate("/access-wallet");
     };
+
+    const handleAccessBlockScan = () => {
+        navigate("/block-scan");
+    };
+
     return (
         <div className="bg-gradient-to-r from-green-900 to-blue-500 w-screen h-screen">
             <div className="homebg" />
             <div className="w-screen mx-auto py-64 content px-52">
                 <div className="container mx-auto flex justify-around">
-                    <div>
+                    <div id="content">
                         <p className="font-bold text-3xl text-white">
                             MyCoin Wallet
                         </p>
@@ -45,6 +50,14 @@ export const Home = () => {
                                 className="bg-gray-500"
                             >
                                 Access wallet
+                            </Button>
+                        </div>
+                        <div className="mt-5">
+                            <Button
+                                onClick={handleAccessBlockScan}
+                                className="bg-green-700"
+                            >
+                                Access Block Scanning
                             </Button>
                         </div>
                     </div>

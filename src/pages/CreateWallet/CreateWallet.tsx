@@ -70,7 +70,7 @@ const Step0 = ({ handleNext }: StepProps) => {
     };
 
     return (
-        <div id="step1" className="space-y-6 flex flex-col">
+        <div id="step0" className="space-y-6 flex flex-col">
             <p>STEP 1.</p>
             Create password
             {/* Input password antd */}

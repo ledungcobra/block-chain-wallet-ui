@@ -1,9 +1,13 @@
 import React from "react";
 import { Route, Routes } from "react-router-dom";
 import { PageLayout } from "../layout/PageLayout";
-import CreateWallet from "../pages/CreateWallet";
+import AccessWallet from "../pages/AccessWallet/AccessWallet";
+import BlockInfoPage from "../pages/BlockInfo/BlockInfo";
+import BlockScan from "../pages/BlockScan/BlockScan";
+import CreateWallet from "../pages/CreateWallet/CreateWallet";
 import { Home } from "../pages/Home/Home";
-import { WalletPage } from "../pages/WalletPage";
+import TransactionInfoPage from "../pages/TransactionInfo/TransactionInfo";
+import { WalletPage } from "../pages/WalletPage/WalletPage";
 interface AppState {
     isLoading: boolean;
     loggedIn: boolean;
@@ -14,6 +18,10 @@ export const AppStateContext = React.createContext<AppState | undefined>(
     undefined
 );
 
+const buildRoute = (route: string, node: React.ReactNode) => (
+    <Route path={route} element={<PageLayout children={node} />} />
+);
+
 export const AppRouter = () => {
     const [loggedIn, setLoggedIn] = React.useState(false);
 
@@ -22,15 +30,19 @@ export const AppRouter = () => {
             value={{ isLoading: false, loggedIn: loggedIn }}
         >
             <Routes>
-                <Route
-                    path="/wallet"
-                    element={<PageLayout children={<WalletPage />} />}
-                />
-                <Route path="/" element={<PageLayout children={<Home />} />} />
-                <Route
-                    path="/create-wallet"
-                    element={<PageLayout children={<CreateWallet />} />}
-                />
+                {buildRoute("/", <Home />)}
+                {buildRoute("/wallet", <WalletPage />)}
+                {buildRoute("/create-wallet", <CreateWallet />)}
+                {buildRoute("/access-wallet", <AccessWallet />)}
+                {buildRoute("/block-scan", <BlockScan />)}
+                {buildRoute("/block/:blockHeight", <BlockInfoPage />)}
+                {buildRoute(
+                    "/transaction/:transactionHash",
+                    <TransactionInfoPage />
+                )}
+
+                {/* 404 route */}
+                {buildRoute("*", <Home />)}
             </Routes>
         </AppStateContext.Provider>
     );

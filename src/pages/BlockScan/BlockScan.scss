@@ -1,0 +1,21 @@
+.scaning-header {
+    position: fixed;
+    top: 0;
+}
+
+.money {
+    position: relative;
+    &::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: -15px;
+        width: 24px;
+        height: 24px;
+        transform: rotateZ(-45deg);
+        background-color: white;
+    }
+}
+
+.money::before {
+}
