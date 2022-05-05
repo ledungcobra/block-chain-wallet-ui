@@ -1,5 +1,3 @@
-import Button from "../../../components/Button";
-
 export const CardItem = ({
     node,
     title,
@@ -20,9 +18,9 @@ export const CardItem = ({
             >
                 {node}
             </div>
-            <Button onClick={onReadMoreClicked} className="bg-green-700">
+            {/* <Button onClick={onReadMoreClicked} className="bg-green-700">
                 {buttonTitle}
-            </Button>
+            </Button> */}
         </div>
     );
 };

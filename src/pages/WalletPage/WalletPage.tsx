@@ -5,7 +5,7 @@ import { AppStateContext } from "../../router/AppRouter";
 
 export const WalletPage = () => {
     const ctx = React.useContext(AppStateContext);
-
+    
     return (
         <div className="h-full flex">
             <SideBar />

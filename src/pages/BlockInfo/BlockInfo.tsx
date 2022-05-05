@@ -1,28 +1,26 @@
 import { faQuestionCircle } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import axios from "axios";
 import React from "react";
 import { useParams } from "react-router-dom";
+import { API_URL } from "../..";
 import HeaderBlockScan from "../../components/HeaderBlockScan/HeaderBlockScan";
-import { mockBlocks } from "../../mocking/data";
 import { calculateTimeDiffFromNow } from "../../utils/utils";
 import { BlockInfo } from "../BlockScan/BlockScan";
 
 type Props = {};
 
 const BlockInfoPage = (props: Props) => {
-  
     const blockHeight = useParams().blockHeight;
     const [currentBlock, setCurrentBlock] = React.useState<BlockInfo | null>(
         null
     );
+
     React.useEffect(() => {
         if (!blockHeight) return;
-        const bl = mockBlocks.find(
-            (b) => b.block_height === parseInt(blockHeight + "")
-        );
-        if (bl) {
-            setCurrentBlock(bl);
-        }
+        axios.get(`${API_URL}/block/${blockHeight}`).then(({ data }) => {
+            setCurrentBlock(data);
+        });
     }, [blockHeight]);
 
     if (currentBlock === null) {

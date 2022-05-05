@@ -1,9 +1,13 @@
 import { faPaperPlane, faWarning } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Input, Steps } from "antd";
+import axios from "axios";
+import { saveAs } from "file-saver";
 import React from "react";
 import { useNavigate } from "react-router-dom";
+import { API_URL } from "../..";
 import Button from "../../components/Button";
+
 type Props = {};
 const Step = Steps.Step;
 const steps = [
@@ -17,6 +21,8 @@ const minPassChars = 4;
 const CreateWallet = (props: Props) => {
     const [step, setStep] = React.useState(0);
     const [error, setError] = React.useState("");
+    const [password, setPassword] = React.useState("");
+  
     const handleNext = () => {
         if (step === 0) {
             setStep(1);
@@ -36,8 +42,20 @@ const CreateWallet = (props: Props) => {
                     <Step title={steps[1]} />
                     <Step title={steps[2]} />
                 </Steps>
-                {step === 0 && <Step0 handleNext={handleNext} />}
-                {step === 1 && <Step1 handleNext={handleNext} />}
+                {step === 0 && (
+                    <Step0
+                        handleNext={handleNext}
+                        password={password}
+                        setPassword={setPassword}
+                    />
+                )}
+                {step === 1 && (
+                    <Step1
+                        handleNext={handleNext}
+                        password={password}
+                        setPassword={setPassword}
+                    />
+                )}
                 {step === 2 && <Step2 />}
             </div>
         </div>
@@ -48,11 +66,13 @@ export default CreateWallet;
 
 interface StepProps {
     handleNext: () => void;
+    password?: string;
+    setPassword?: (password: string) => void;
 }
 
-const Step0 = ({ handleNext }: StepProps) => {
-    const [password, setPassword] = React.useState("");
-    const [repassword, setRepassword] = React.useState("");
+const Step0 = ({ handleNext, setPassword }: StepProps) => {
+    const [password, setInnerPassword] = React.useState("1234");
+    const [repassword, setRepassword] = React.useState("1234");
     const [error, setError] = React.useState("");
     const next = () => {
         if (password.length < minPassChars) {
@@ -63,6 +83,7 @@ const Step0 = ({ handleNext }: StepProps) => {
         }
 
         if (password === repassword) {
+            setPassword!!(password);
             handleNext();
         } else {
             setError("Passwords do not match");
@@ -77,7 +98,7 @@ const Step0 = ({ handleNext }: StepProps) => {
             <Input.Password
                 placeholder="Input password"
                 minLength={minPassChars}
-                onChange={(e) => setPassword(e.target.value)}
+                onChange={(e) => setInnerPassword(e.target.value)}
                 onBlur={() => {
                     if (password.length < minPassChars) {
                         setError(
@@ -122,9 +143,23 @@ const Step0 = ({ handleNext }: StepProps) => {
     );
 };
 
-const Step1 = ({ handleNext }: StepProps) => {
+const Step1 = ({ handleNext, password }: StepProps) => {
     const handleDownloadWalletAndNext = () => {
-        // TODO: download wallet json
+        //
+        // API_URL
+        axios({
+            url: API_URL + "/wallet/create",
+            method: "POST",
+            data: {
+                password,
+            },
+        }).then((response) => {
+            const wallet = response.data;
+            var blob = new Blob([JSON.stringify(wallet)], {
+                type: "text/plain;charset=utf-8",
+            });
+            saveAs(blob, "wallet.json");
+        });
         handleNext();
     };
 

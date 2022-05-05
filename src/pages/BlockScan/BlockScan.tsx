@@ -1,6 +1,7 @@
+import axios from "axios";
 import React from "react";
+import { API_URL } from "../..";
 import HeaderBlockScan from "../../components/HeaderBlockScan/HeaderBlockScan";
-import { mockBlocks, transactionsMock } from "../../mocking/data";
 import "./BlockScan.scss";
 import { BlockItem } from "./components/BlockItem";
 import { CardItem } from "./components/CardItem";
@@ -27,6 +28,25 @@ export type TransactionInfo = {
 };
 
 function BlockScan() {
+    const [blocks, setBlocks] = React.useState<BlockInfo[]>([]);
+
+    const [transactions, setTransactions] = React.useState<TransactionInfo[]>(
+        []
+    );
+
+    React.useEffect(() => {
+        axios.get(`${API_URL}/block`).then(({ data }) => {
+            setBlocks(data.blocks);
+            // console.log(data.blocks);
+        });
+
+        axios.get(`${API_URL}/transaction`).then(({ data }) => {
+            console.log(data);
+
+            setTransactions(data.transactions);
+        });
+    }, []);
+
     return (
         <div className="w-full container mx-auto h-screen">
             {/* Scan MyWallet Header */}
@@ -35,18 +55,18 @@ function BlockScan() {
             {/* Scan MyWallet Lastest */}
             <div
                 id="lastest"
-                className="flex justify-center w-full mt-24 space-x-3 h-full "
+                className="flex justify-center w-full pt-24 space-x-3 h-full "
             >
                 <CardItem
                     title="Lastest Blocks"
-                    node={mockBlocks.map((block) => (
+                    node={blocks.map((block) => (
                         <BlockItem data={block} />
                     ))}
                     buttonTitle="View All Blocks"
                 />
                 <CardItem
                     title="Lastest Transactions"
-                    node={transactionsMock.map((block) => (
+                    node={transactions.map((block) => (
                         <TransactionItem data={block} />
                     ))}
                     buttonTitle="View All Transactions"

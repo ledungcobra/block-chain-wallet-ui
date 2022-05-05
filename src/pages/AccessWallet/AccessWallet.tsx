@@ -1,14 +1,18 @@
 import { faComputer } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { Input, Steps } from "antd";
+import { Alert, Input, Steps } from "antd";
+import axios from "axios";
 import React from "react";
+import { useNavigate } from "react-router-dom";
+import { API_URL } from "../..";
 import Button from "../../components/Button";
+import { KEY } from "../../utils/utils";
 
 type Props = {};
 const Step = Steps.Step;
 const steps = ["Select file", "Enter password"];
 
-interface Wallet {
+export interface Wallet {
     address: string;
     private_key: string;
     public_key: string;
@@ -17,13 +21,40 @@ interface Wallet {
 const AccessWallet = (props: Props) => {
     const [step, setStep] = React.useState(0);
     const [fileUpload, setFileUpload] = React.useState<Wallet | null>(null);
+    const [showErr, setShowErr] = React.useState("");
+    const navigate = useNavigate();
 
     const handleNext = () => {
         if (step === 0) {
             setStep(1);
             // TODO next
-        } else if (step === 1) {
         }
+    };
+
+    const handleClickAccessClicked = (password: string) => {
+        if (!password || password === "") {
+            setShowErr("Password is required");
+            setTimeout(function () {
+                setShowErr("");
+            }, 3000);
+            return;
+        }
+
+        axios
+            .post(`${API_URL}/wallet/access`, {
+                ...fileUpload,
+                password,
+            })
+            .then(({ data }) => {
+                if (!data) {
+                    setShowErr("Password invalid");
+                    return;
+                    // Password not match
+                }
+                const wallet = data;
+                localStorage.setItem(KEY, JSON.stringify(wallet));
+                navigate("/wallet");
+            });
     };
 
     return (
@@ -45,7 +76,11 @@ const AccessWallet = (props: Props) => {
                         }}
                     />
                 )}
-                {step === 1 && <Step1 />}
+                {step === 1 && (
+                    <Step1 handleClickAccess={handleClickAccessClicked} />
+                )}
+
+                {showErr && <Alert message="Error" type="error" showIcon />}
             </div>
         </div>
     );
@@ -110,8 +145,10 @@ const Step0 = ({ handleNext }: Step0Props) => {
         </div>
     );
 };
-
-const Step1 = () => {
+interface Step1Props {
+    handleClickAccess: (password: string) => void;
+}
+const Step1 = ({ handleClickAccess }: Step1Props) => {
     const [password, setPassword] = React.useState("");
 
     return (
@@ -127,7 +164,12 @@ const Step1 = () => {
                 </div>
                 <div className="flex flex-end py-5 w-full">
                     <div className="flex-1" />
-                    <Button className="w-48 bg-green-700">Access Wallet</Button>
+                    <Button
+                        className="w-48 bg-green-700"
+                        onClick={() => handleClickAccess(password)}
+                    >
+                        Access Wallet
+                    </Button>
                 </div>
             </div>
         </div>

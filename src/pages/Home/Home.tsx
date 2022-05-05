@@ -3,8 +3,10 @@ import {
     faCreditCardAlt,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import React from "react";
 import { useNavigate } from "react-router-dom";
 import Button from "../../components/Button";
+import { hasWalletSet } from "../../utils/utils";
 import "./Home.scss";
 
 export const Home = () => {
@@ -22,6 +24,11 @@ export const Home = () => {
         navigate("/block-scan");
     };
 
+    React.useEffect(() => {
+        if (hasWalletSet()) {
+            navigate("/wallet");
+        }
+    }, []);
     return (
         <div className="bg-gradient-to-r from-green-900 to-blue-500 w-screen h-screen">
             <div className="homebg" />

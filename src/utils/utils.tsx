@@ -1,4 +1,5 @@
 import moment from "moment";
+import { Wallet } from "../pages/AccessWallet/AccessWallet";
 
 export const calculateTimeDiffFromNow = (timestamp: number): string => {
     const now = moment.utc(+new Date());
@@ -31,4 +32,30 @@ export const calculateTimeDiffFromNow = (timestamp: number): string => {
         return "undefined";
     }
     return s;
+};
+
+export const KEY = "WALLET_KEY";
+
+export const hasWalletSet = (): boolean => {
+    const wallet = localStorage.getItem(KEY);
+    if (!wallet) {
+        return false;
+    }
+    const parseWalet: Wallet = JSON.parse(wallet) as Wallet;
+    if (parseWalet.address && parseWalet.private_key && parseWalet.public_key) {
+        return true;
+    }
+    return false;
+};
+
+export const getWallet = (): Wallet | null => {
+    const wallet = localStorage.getItem(KEY);
+    if (!wallet) {
+        return null;
+    }
+    const parseWalet: Wallet = JSON.parse(wallet) as Wallet;
+    if (parseWalet.address && parseWalet.private_key && parseWalet.public_key) {
+        return parseWalet;
+    }
+    return null;
 };

@@ -3,28 +3,26 @@ import {
     faQuestionCircle,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
+import { API_URL } from "../..";
 import HeaderBlockScan from "../../components/HeaderBlockScan/HeaderBlockScan";
-import { transactionsMock } from "../../mocking/data";
 import { calculateTimeDiffFromNow } from "../../utils/utils";
 import { TransactionInfo } from "../BlockScan/BlockScan";
 type Props = {};
-const testTXHash = "0x12132132131231231212";
 
-// TODO: Implement
 const TransactionInfoPage = (props: Props) => {
     const transactionHash = useParams().transactionHash;
     const [currentBlock, setCurrentTx] = useState<TransactionInfo | null>(null);
 
     useEffect(() => {
         if (!transactionHash) return;
-        const bl = transactionsMock.find(
-            (b) => b.transaction_hash === transactionHash
-        );
-        if (bl) {
-            setCurrentTx(bl);
-        }
+        axios
+            .get(`${API_URL}/transaction/${transactionHash}`)
+            .then(({ data }) => {
+                setCurrentTx(data);
+            });
     }, [transactionHash]);
 
     if (currentBlock === null) {
