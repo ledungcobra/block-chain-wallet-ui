@@ -240,7 +240,7 @@ const Step1 = ({ handleNext, password }: StepProps) => {
 const Step2 = () => {
     const navigate = useNavigate();
     const handleOpenWallet = () => {
-        navigate("/wallet");
+        navigate("/access-wallet");
     };
     return (
         <div id="step2" className="space-y-6 flex flex-col">
